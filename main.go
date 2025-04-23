@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 const (
@@ -79,18 +80,28 @@ func main() {
 	fmt.Fprintf(os.Stdout, "Starting %s %s\n", nameApp, versionApp)
 	fmt.Fprintf(os.Stdout, "Scanning %s (%s)\n", host, protocol)
 
+	var wg sync.WaitGroup
+
 	for _, pr := range parsedPorts {
-		socket := fmt.Sprintf(host+":%d", pr)
-		conn, err := net.Dial(protocol, socket)
+		wg.Add(1)
+		go func(goPort int) {
+			defer wg.Done()
+			socket := fmt.Sprintf(host+":%d", goPort)
+			conn, err := net.Dial(protocol, socket)
 
-		if err != nil {
-			fmt.Printf("%d - closed\n", pr)
-			continue
-		}
+			if err != nil {
+				fmt.Printf("%d - closed\n", goPort)
+				return
+			}
 
-		conn.Close()
-		fmt.Printf("%d - open\n", pr)
+			conn.Close()
+			fmt.Printf("%d - open\n", goPort)
+
+		}(pr)
 	}
+
+	wg.Wait()
+	fmt.Fprintf(os.Stdout, "Finish\n")
 }
 
 // ParsePorts: TODO doc
