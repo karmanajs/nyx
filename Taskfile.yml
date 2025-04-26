@@ -1,0 +1,23 @@
+version: '3'
+
+vars:
+  BIN_DIR: "./bin"
+  EXE_NAME: "nyx"
+
+tasks:
+  init:
+    desc: "Create folder bin"
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+
+  build-cli:
+    desc: "Build CLI"
+    deps: [init]
+    cmds:
+      - go build -o {{.BIN_DIR}}/{{.EXE_NAME}} ./cmd/cli
+
+  clean:
+    desc: "Delete binaries"
+    cmds:
+      - rm -rf {{.BIN_DIR}}/*
+      - go clean
