@@ -11,6 +11,13 @@ import (
 	"sync"
 )
 
+type Config struct {
+	Host       string
+	Ports      string
+	Protocol   string
+	OutputJSON bool
+}
+
 const (
 	// Config for Application
 	nameApp    = "Nyx"
@@ -18,8 +25,9 @@ const (
 	versionApp = "0.0.1"
 
 	// Default parametrs
-	defaultPorts    = "80,443"
-	defaultProtocol = "tcp"
+	defaultPorts      = "80,443"
+	defaultProtocol   = "tcp"
+	defaultOutputJSON = false
 
 	// Consts
 	maxPort = 65535
@@ -27,11 +35,34 @@ const (
 
 func main() {
 
-	var (
-		host     string
-		ports    string
-		protocol string
-	)
+	config := parseFlags()
+
+	parsedPorts, err := ParsePorts(config.Ports)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error parsing ports: %v\n", err)
+		os.Exit(1)
+	}
+
+	if config.Host == "" {
+		flag.Usage()
+		os.Exit(0)
+	}
+
+	if _, err := net.LookupHost(config.Host); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: invalid host %s - %v\n", config.Host, err)
+		os.Exit(1)
+	}
+
+	fmt.Fprintf(os.Stdout, "Starting %s %s\n", nameApp, versionApp)
+	fmt.Fprintf(os.Stdout, "Scanning %s (%s)\n", config.Host, config.Protocol)
+
+	Scan(config.Host, parsedPorts, config.Protocol)
+
+	fmt.Fprintf(os.Stdout, "Finish\n")
+}
+
+func parseFlags() Config {
+	var config Config
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stdout, "%s %s\n", nameApp, versionApp)
@@ -44,45 +75,35 @@ func main() {
 		fmt.Fprintf(os.Stdout, "  -p, --ports <port range>: Only scan specified ports.\n")
 		fmt.Fprintf(os.Stdout, "  -tp, --type-protocol: Type of internet protocol.\n")
 		fmt.Fprintf(os.Stdout, "    All types: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket.\n")
+		fmt.Fprintf(os.Stdout, "  --json: Output results in JSON format\n")
 
 		fmt.Fprintf(os.Stdout, "\nExamples:\n")
 		fmt.Fprintf(os.Stdout, "  %s -h example.com -p 443,54,70-80\n", nameBin)
 		fmt.Fprintf(os.Stdout, "  %s -h=example.com --ports 443,54,70-80\n", nameBin)
 		fmt.Fprintf(os.Stdout, "  %s --host=example.com -p=443,54,70-80\n", nameBin)
-		fmt.Fprintf(os.Stdout, "  %s --host=example.com --ports=443,54,70-80\n", nameBin)
+		fmt.Fprintf(os.Stdout, "  %s --host=example.com --ports=443,54,70-80 --json\n", nameBin)
 	}
 
-	flag.StringVar(&host, "h", "", "Target host (IP or domain)")
-	flag.StringVar(&host, "host", "", "Target host (IP or domain)")
-	flag.StringVar(&ports, "p", defaultPorts, "Ports to scan (comma-separated or range)")
-	flag.StringVar(&ports, "ports", defaultPorts, "Ports to scan")
-	flag.StringVar(&protocol, "tp", defaultProtocol, "Protocol type (tcp/udp/etc.)")
-	flag.StringVar(&protocol, "type-protocol", defaultProtocol, "Protocol type")
+	flag.StringVar(&config.Host, "h", "", "Target host (IP or domain)")
+	flag.StringVar(&config.Host, "host", "", "Target host (IP or domain)")
+	flag.StringVar(&config.Ports, "p", defaultPorts, "Ports to scan (comma-separated or range)")
+	flag.StringVar(&config.Ports, "ports", defaultPorts, "Ports to scan")
+	flag.StringVar(&config.Protocol, "tp", defaultProtocol, "Protocol type (tcp/udp/etc.)")
+	flag.StringVar(&config.Protocol, "type-protocol", defaultProtocol, "Protocol type")
+	flag.BoolVar(&config.OutputJSON, "json", defaultOutputJSON, "Output results in JSON format")
 
 	flag.Parse()
 
-	if host == "" {
-		flag.Usage()
-		os.Exit(0)
-	}
+	return config
+}
 
-	if _, err := net.LookupHost(host); err != nil {
-		fmt.Fprintf(os.Stdout, "Error: invalid host %s - %v\n", host, err)
-		os.Exit(1)
-	}
+// Scan: TODO doc
+func Scan(host string, ports []int, protocol string) {
 
-	parsedPorts, err := ParsePorts(ports)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error parsing ports: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Fprintf(os.Stdout, "Starting %s %s\n", nameApp, versionApp)
-	fmt.Fprintf(os.Stdout, "Scanning %s (%s)\n", host, protocol)
-
+	// create a sync
 	var wg sync.WaitGroup
 
-	for _, pr := range parsedPorts {
+	for _, pr := range ports {
 		wg.Add(1)
 		go func(goPort int) {
 			defer wg.Done()
@@ -101,7 +122,7 @@ func main() {
 	}
 
 	wg.Wait()
-	fmt.Fprintf(os.Stdout, "Finish\n")
+
 }
 
 // ParsePorts: TODO doc
