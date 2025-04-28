@@ -17,3 +17,11 @@ type ScanResult struct {
 	Status  string `json:"status"`
 	Service string `json:"service,omitempty"`
 }
+
+// ScanRequest post requet for http server
+type ScanRequest struct {
+	Host     string `json:"host"`
+	Ports    string `json:"ports"`
+	Protocol string `json:"protocol"`
+	Timeout  string `json:"timeout"`
+}
