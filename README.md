@@ -116,17 +116,17 @@ nyx-cli -h example.com -p 22,80,443
 
 Scan common ports on example.com:
 ```bash
-nyx -h example.com
+nyx-cli -h example.com
 ```
 
 Scan specific ports with UDP protocol:
 ```bash
-nyx -h example.com -p 53,123 -tp udp
+nyx-cli -h example.com -p 53,123 -tp udp
 ```
 
 Scan a port range and save to JSON:
 ```bash
-nyx -h example.com -p 8000-9000 -jf results.json
+nyx-cli -h example.com -p 8000-9000 -jf results.json
 ```
 
 Scan usage all flags:
