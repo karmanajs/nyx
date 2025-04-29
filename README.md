@@ -1,29 +1,34 @@
 # Nyx - Simple Port Scanner in Go
 
-**Nyx** is a lightweight port scanner written in Go, designed for quick network reconnaissance and port availability checks.
+**Nyx** is a dual-interface port scanning tool written in Go, offering both CLI and web-based scanning capabilities.
+
+![Nyx Web Interface](screenshots/web-interface.png)
 
 ## Features
 
-- Scan single ports, comma-separated lists, and port ranges (e.g., `80,443,8000-9000`)
-- Support for multiple protocols (TCP, UDP, etc.)
-- Simple command-line interface
-- Fast and efficient scanning
-- Clean output format
-- JSON export support
-- Configurable timeout
+### Core Functionality
+- Concurrent port scanning engine
+- Support for TCP/UDP protocols (IPv4/IPv6)
+- Port range specification (e.g., 80,443,8000-9000)
+- Configurable connection timeout
+
+### CLI Interface
+- JSON output for programmatic use
+- Lightweight executable (<5MB)
+- Pipeline-friendly output
+
+### Web Interface
+- Browser-based scanning interface
+- Responsive design
+- Interactive results display
+- Form-based configuration
+
 
 ## Installation
 
-### From Source (Makefile)
+### Install from Source
 ```bash
 git clone https://github.com/karmanajs/nyx.git
-cd nyx
-make build-cli  # Builds binary in ./bin/nyx
-```
-
-### From Source (Taskfile)
-```bash
-task build-cli
 ```
 
 ### Using Go Install
@@ -31,12 +36,60 @@ task build-cli
 go install github.com/karmanajs/nyx@latest
 ```
 
-## Usage
-
-Basic syntax:
+### Build make or task
 ```bash
-nyx -h <host> [-p <ports>] [-tp <protocol>] [-jf <output.json>]
+cd nyx
+
+# Build both components on make
+make all
+
+# Or usage task
+task all
+
+# Or build individually
+make build-cli    # command-line interface
+make build-server # web interface
+
+# Or build individually on task
+task build-cli    # command-line interface
+task build-server # web interface
 ```
+
+### Cleanup
+```bash
+# Usage make
+make clean
+
+# Or usage task
+task clean
+```
+
+## Web Interface Usage
+
+### Configuration Options
+
+#### Scan Configuration
+- Target Host: Enter domain name or IP address
+- Ports: Specify ports/ranges (comma-separated)
+- Protocol: Select TCP/UDP protocol
+- Timeout: Set connection timeout (default: 2s)
+
+#### Viewing Results
+
+##### Results include:
+- Port number
+- Status (open/closed)
+
+![Check result](screenshots/check-result.png)
+
+
+## CLI Usage
+
+### Basic syntax:
+```bash
+nyx-cli -h <host> [-p <ports>] [-tp <protocol>] [-jf <output.json>]
+```
+
 
 ### Options
 
@@ -56,6 +109,11 @@ nyx -h <host> [-p <ports>] [-tp <protocol>] [-jf <output.json>]
 
 ## Examples
 
+Basic scan
+```bash
+nyx-cli -h example.com -p 22,80,443
+```
+
 Scan common ports on example.com:
 ```bash
 nyx -h example.com
@@ -69,6 +127,11 @@ nyx -h example.com -p 53,123 -tp udp
 Scan a port range and save to JSON:
 ```bash
 nyx -h example.com -p 8000-9000 -jf results.json
+```
+
+Scan usage all flags:
+```bash
+nyx-cli -h 192.168.1.1 -p 1-1024 -tp tcp -to 1s -jf results.json
 ```
 
 ## Output Example
@@ -97,19 +160,6 @@ JSON output (when using -jf):
     "status": "closed"
   }
 ]
-```
-
-## Building and Maintenance
-Build with Make
-```bash
-make build-cli  # Build binary
-make clean      # Remove build artifacts
-```
-
-Build with Task
-```bash
-task build-cli  # Build binary
-task clean      # Clean up
 ```
 
 ## License

@@ -2,22 +2,41 @@ version: '3'
 
 vars:
   BIN_DIR: "./bin"
-  EXE_NAME: "nyx"
+  CLI_EXE: "nyx-cli"
+  SERVER_EXE: "nyx-server"
 
 tasks:
   init:
-    desc: "Create folder bin"
+    desc: "Create binaries directory"
     cmds:
       - mkdir -p {{.BIN_DIR}}
 
   build-cli:
-    desc: "Build CLI"
+    desc: "Build command-line interface"
     deps: [init]
     cmds:
-      - go build -o {{.BIN_DIR}}/{{.EXE_NAME}} ./cmd/cli
+      - go build -o {{.BIN_DIR}}/{{.CLI_EXE}} ./cmd/cli
+
+  build-server:
+    desc: "Build web server interface"
+    deps: [init]
+    cmds:
+      - go build -o {{.BIN_DIR}}/{{.SERVER_EXE}} ./cmd/server
+
+  all:
+    desc: "Build both interfaces"
+    cmds:
+      - task: build-cli
+      - task: build-server
 
   clean:
-    desc: "Delete binaries"
+    desc: "Remove all build artifacts"
     cmds:
       - rm -rf {{.BIN_DIR}}/*
       - go clean
+
+  run-server:
+    desc: "Build and run web server"
+    cmds:
+      - task: build-server
+      - "{{.BIN_DIR}}/{{.SERVER_EXE}}"
