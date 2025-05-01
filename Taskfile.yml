@@ -2,7 +2,6 @@ version: '3'
 
 vars:
   BIN_DIR: "./bin"
-  CLI_EXE: "nyx-cli"
   SERVER_EXE: "nyx-server"
 
 tasks:
@@ -11,22 +10,16 @@ tasks:
     cmds:
       - mkdir -p {{.BIN_DIR}}
 
-  build-cli:
-    desc: "Build command-line interface"
-    deps: [init]
-    cmds:
-      - go build -o {{.BIN_DIR}}/{{.CLI_EXE}} ./cmd/cli
-
   build-server:
+    dir: ./backend
     desc: "Build web server interface"
     deps: [init]
     cmds:
-      - go build -o {{.BIN_DIR}}/{{.SERVER_EXE}} ./cmd/server
+      - go build -o ../{{.BIN_DIR}}/{{.SERVER_EXE}} ./cmd/api
 
   all:
     desc: "Build both interfaces"
     cmds:
-      - task: build-cli
       - task: build-server
 
   clean:

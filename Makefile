@@ -1,19 +1,15 @@
 BIN_DIR := ./bin
-CLI_EXE := nyx-cli
 SERVER_EXE := nyx-server
+BACKEND_DIR := ./backend
 
 .PHONY: init build-cli build-server clean all
 
 init:
 	@mkdir -p $(BIN_DIR)
 
-build-cli: init
-	@echo "Building CLI interface..."
-	@go build -o $(BIN_DIR)/$(CLI_EXE) ./cmd/cli
-
 build-server: init
 	@echo "Building server interface..."
-	@go build -o $(BIN_DIR)/$(SERVER_EXE) ./cmd/server
+	@cd $(BACKEND_DIR) && go build -o ../$(BIN_DIR)/$(SERVER_EXE) ./cmd/api
 
 all: build-cli build-server
 

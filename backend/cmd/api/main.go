@@ -10,13 +10,17 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/karmanajs/nyx/internal/config"
 	"github.com/karmanajs/nyx/internal/core"
 	"github.com/karmanajs/nyx/internal/parser"
 	"github.com/karmanajs/nyx/pkg/types"
 )
 
 func main() {
-	http.Handle("/", http.FileServer((http.Dir("cmd/server/static"))))
+
+	cfg := config.DefaultConfig()
+
+	http.Handle("/", http.FileServer((http.Dir("frontend/static"))))
 
 	http.HandleFunc("/scan", func(w http.ResponseWriter, r *http.Request) {
 
@@ -46,8 +50,8 @@ func main() {
 		renderResults(w, result)
 	})
 
-	log.Println("Server stated at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Printf("Server stated at http://localhost:%s", cfg.Port)
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, nil))
 }
 
 // TODO doc
