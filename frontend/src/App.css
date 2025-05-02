@@ -3,9 +3,9 @@
     --neon-purple: #bc13fe;
     --dark-bg: #0a0a12;
     --darker-bg: #050508;
-}
-
-body {
+  }
+  
+  body {
     font-family: 'Courier New', monospace;
     background: var(--dark-bg);
     color: var(--neon-green);
@@ -15,15 +15,15 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-}
-
-.header {
+  }
+  
+  .header {
     text-align: center;
     padding: 2rem;
     position: relative;
-}
-
-.header::after {
+  }
+  
+  .header::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -32,16 +32,16 @@ body {
     height: 3px;
     background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
     box-shadow: 0 0 10px var(--neon-purple);
-}
-
-h1 {
+  }
+  
+  h1 {
     font-size: 3rem;
     margin: 0;
     text-shadow: 0 0 20px var(--neon-green);
     animation: flicker 1.5s infinite alternate;
-}
-
-.main {
+  }
+  
+  .main {
     max-width: 600px;
     margin: 0 auto;
     padding: 2rem;
@@ -51,9 +51,9 @@ h1 {
     background: var(--darker-bg);
     position: relative;
     z-index: 1;
-}
-
-.main::before {
+  }
+  
+  .main::before {
     content: "";
     position: absolute;
     top: -2px;
@@ -67,25 +67,25 @@ h1 {
     opacity: 0;
     transition: 0.5s;
     animation: animate 8s linear infinite;
-}
-
-.main:hover::before {
+  }
+  
+  .main:hover::before {
     opacity: 0.1;
-}
-
-.form-group {
+  }
+  
+  .form-group {
     margin-bottom: 1.5rem;
     position: relative;
-}
-
-label {
+  }
+  
+  label {
     display: block;
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
     letter-spacing: 1px;
-}
-
-input, select {
+  }
+  
+  input, select {
     width: 100%;
     padding: 12px;
     background: transparent;
@@ -95,18 +95,18 @@ input, select {
     box-sizing: border-box;
     font-size: 1rem;
     transition: all 0.3s;
-}
-
-input:focus, select:focus {
+  }
+  
+  input:focus, select:focus {
     outline: none;
     box-shadow: 0 0 10px var(--neon-green);
-}
-
-input::placeholder {
+  }
+  
+  input::placeholder {
     color: rgba(11, 255, 80, 0.5);
-}
-
-.scan-button {
+  }
+  
+  .scan-button {
     width: 100%;
     padding: 15px;
     background: transparent;
@@ -120,9 +120,9 @@ input::placeholder {
     position: relative;
     overflow: hidden;
     z-index: 1;
-}
-
-.scan-button::before {
+  }
+  
+  .scan-button::before {
     content: "";
     position: absolute;
     top: 0;
@@ -132,22 +132,22 @@ input::placeholder {
     background: linear-gradient(90deg, transparent, rgba(188, 19, 254, 0.4), transparent);
     transition: 0.5s;
     z-index: -1;
-}
-
-.scan-button:hover {
+  }
+  
+  .scan-button:hover {
     box-shadow: 0 0 20px var(--neon-purple);
     color: #fff;
-}
-
-.footer {
+  }
+  
+  .footer {
     text-align: center;
     padding: 2rem;
     margin-top: auto;
     font-size: 0.8rem;
     opacity: 0.7;
-}
-
-@keyframes flicker {
+  }
+  
+  @keyframes flicker {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
         text-shadow: 0 0 10px var(--neon-green),
                      0 0 20px var(--neon-green),
@@ -156,9 +156,9 @@ input::placeholder {
     20%, 24%, 55% {
         text-shadow: none;
     }
-}
-
-@keyframes animate {
+  }
+  
+  @keyframes animate {
     0% {
         background-position: 0 0;
     }
@@ -168,57 +168,57 @@ input::placeholder {
     100% {
         background-position: 0 0;
     }
-}
-
-@keyframes scanning {
+  }
+  
+  @keyframes scanning {
     0% {
         box-shadow: 0 0 5px var(--neon-green);
     }
     100% {
         box-shadow: 0 0 30px var(--neon-green);
     }
-}
-
-.scanning {
+  }
+  
+  .scanning {
     animation: scanning 1s infinite alternate;
-}
-
-.results-container {
+  }
+  
+  .results-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background: var(--darker-bg);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.results-table {
+  }
+  
+  .results-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-}
-
-.results-table th, .results-table td {
+  }
+  
+  .results-table th, .results-table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #444;
-}
-
-.results-table th {
+  }
+  
+  .results-table th {
     background-color: #333;
     color: #f0f0f0;
-}
-
-.open {
+  }
+  
+  .open {
     color: #4CAF50;
     font-weight: bold;
-}
-
-.closed {
+  }
+  
+  .closed {
     color: #F44336;
-}
-
-.back-button {
+  }
+  
+  .back-button {
     display: inline-block;
     padding: 10px 20px;
     background: var(--neon-purple);
@@ -227,9 +227,9 @@ input::placeholder {
     border-radius: 4px;
     margin-top: 20px;
     transition: all 0.3s;
-}
-
-.back-button:hover {
+  }
+  
+  .back-button:hover {
     background: #8a2be2;
     box-shadow: 0 0 20px var(--neon-purple);
-}
+  }
